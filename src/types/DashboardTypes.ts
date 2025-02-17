@@ -1,7 +1,11 @@
 export interface ViewModule {
   id: string;
   type: string;
-  config: any;
+  config: {
+    title: string;
+    dataSource?: string;
+    timeRange?: string;
+  };
   position: {
     x: number;
     y: number;

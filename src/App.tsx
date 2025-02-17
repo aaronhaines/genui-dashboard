@@ -22,7 +22,7 @@ const App: React.FC = () => {
     setMessages((prev) => [...prev, userMessage]);
 
     try {
-      const response = await llmAgent.processUserRequest(message);
+      const response = await llmAgent.processUserRequest(message, modules);
       console.log("Current modules:", modules);
       console.log("LLM Response:", response);
 

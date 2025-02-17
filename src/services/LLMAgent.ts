@@ -17,7 +17,10 @@ export class LLMAgent {
     });
   }
 
-  async processUserRequest(message: string): Promise<{
+  async processUserRequest(
+    message: string,
+    existingModules: ViewModule[]
+  ): Promise<{
     addModules: ViewModule[];
     removeModules: string[];
   }> {
@@ -29,6 +32,11 @@ export class LLMAgent {
       };
     }
 
+    // Create a list of existing module IDs
+    const existingModuleIds = existingModules
+      .map((module) => module.id)
+      .join(", ");
+
     try {
       const response = await this.openai.chat.completions.create({
         model: "gpt-4",
@@ -38,7 +46,8 @@ export class LLMAgent {
             content: `You are a financial dashboard assistant that ONLY responds in valid JSON format.
             Never include explanatory text outside the JSON structure.
             
-            Available module types: 'lineChart', 'barChart', 'dataTable', 'metrics'
+            Available module types: 'lineChart', 'barChart', 'dataTable', 'metrics'.
+            Current modules: [${existingModuleIds}]. When referring to modules, use the unique ID associated with each module.
             
             Response must always be in this exact format:
             {
