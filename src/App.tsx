@@ -23,31 +23,53 @@ const App: React.FC = () => {
 
     try {
       const response = await llmAgent.processUserRequest(message);
+      console.log("Current modules:", modules);
       console.log("LLM Response:", response);
+
+      // Handle module removal first
+      if (response.removeModules.length > 0) {
+        console.log("Attempting to remove modules:", response.removeModules);
+        setModules((prev) => {
+          const updatedModules = prev.filter((module) => {
+            const shouldKeep = !response.removeModules.includes(module.id);
+            console.log(
+              `Module ${module.id}: ${shouldKeep ? "keeping" : "removing"}`
+            );
+            return shouldKeep;
+          });
+          console.log("Modules after removal:", updatedModules);
+          return updatedModules;
+        });
+      }
+
+      // Then handle adding new modules
+      if (response.addModules.length > 0) {
+        console.log("Adding new modules:", response.addModules);
+        setModules((prev) => {
+          const newModules = [...prev, ...response.addModules];
+          console.log("Modules after addition:", newModules);
+          return newModules;
+        });
+      }
 
       // Add assistant message to chat
       const assistantMessage: ChatMessage = {
         id: (Date.now() + 1).toString(),
         role: "assistant",
-        content: `Updated dashboard with ${response.addModules.length} new modules and removed ${response.removeModules.length} modules.`,
+        content: `Updated dashboard: ${
+          response.addModules.length > 0
+            ? `added ${response.addModules.length} modules`
+            : ""
+        } ${
+          response.removeModules.length > 0
+            ? `removed ${response.removeModules.length} modules`
+            : ""
+        }`,
         timestamp: new Date(),
       };
       setMessages((prev) => [...prev, assistantMessage]);
-
-      // Remove modules if specified
-      if (response.removeModules.length > 0) {
-        setModules((prev) =>
-          prev.filter((module) => !response.removeModules.includes(module.id))
-        );
-      }
-
-      // Add new modules
-      if (response.addModules.length > 0) {
-        setModules((prev) => [...prev, ...response.addModules]);
-      }
     } catch (error) {
       console.error("Error processing message:", error);
-      // Add error message to chat
       const errorMessage: ChatMessage = {
         id: (Date.now() + 1).toString(),
         role: "assistant",

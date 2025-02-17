@@ -35,22 +35,32 @@ export class LLMAgent {
         messages: [
           {
             role: "system",
-            content: `You are a financial dashboard assistant. You help users by creating and managing dashboard modules.
-            Available module types are: 'lineChart', 'barChart', 'dataTable', 'metrics'.
-            Respond in JSON format with modules to add or remove based on the user's request.
-            Example response format: 
+            content: `You are a financial dashboard assistant that ONLY responds in valid JSON format.
+            Never include explanatory text outside the JSON structure.
+            
+            Available module types: 'lineChart', 'barChart', 'dataTable', 'metrics'
+            
+            Response must always be in this exact format:
             {
-              "addModules": [{
-                "id": "unique-id",
-                "type": "lineChart",
-                "config": {
-                  "title": "Stock Price Trends",
-                  "dataSource": "AAPL",
-                  "timeRange": "1M"
-                },
-                "position": { "x": 0, "y": 0, "w": 6, "h": 4 }
-              }],
-              "removeModules": ["module-id-to-remove"]
+              "addModules": [
+                {
+                  "id": "unique-string",
+                  "type": "one-of-available-types",
+                  "config": {
+                    "title": "string",
+                    "dataSource": "string",
+                    "timeRange": "string"
+                  },
+                  "position": { "x": 0, "y": 0, "w": 6, "h": 4 }
+                }
+              ],
+              "removeModules": ["id-to-remove"]
+            }
+
+            Even if no actions are needed, respond with empty arrays:
+            {
+              "addModules": [],
+              "removeModules": []
             }`,
           },
           {
@@ -58,15 +68,32 @@ export class LLMAgent {
             content: message,
           },
         ],
-        temperature: 0.7,
+        temperature: 0.3,
         max_tokens: 1000,
       });
 
-      const result = JSON.parse(
-        response.choices[0].message.content ||
-          '{"addModules":[], "removeModules":[]}'
-      );
-      return result;
+      let result;
+      try {
+        const content =
+          response.choices[0].message.content ||
+          '{"addModules":[], "removeModules":[]}';
+        result = JSON.parse(content);
+      } catch (parseError) {
+        console.error("Error parsing LLM response:", parseError);
+        console.error("Raw response:", response.choices[0].message.content);
+        result = {
+          addModules: [],
+          removeModules: [],
+        };
+      }
+
+      // Ensure the response has the correct structure
+      return {
+        addModules: Array.isArray(result.addModules) ? result.addModules : [],
+        removeModules: Array.isArray(result.removeModules)
+          ? result.removeModules
+          : [],
+      };
     } catch (error) {
       console.error("Error processing request:", error);
       return {
