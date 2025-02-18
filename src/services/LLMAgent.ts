@@ -40,10 +40,10 @@ export class LLMAgent {
       };
     }
 
-    // Create a list of existing module IDs
-    const existingModuleIds = existingModules
-      .map((module) => module.id)
-      .join(", ");
+    // Create a description of existing modules including both ID and description
+    const existingModulesDescription = existingModules
+      .map((module) => `${module.id}: ${module.description || module.type}`)
+      .join("\n");
 
     try {
       const openaiModel = import.meta.env.VITE_OPENAI_MODEL;
@@ -57,7 +57,7 @@ export class LLMAgent {
             role: "system",
             content: promptTemplate.replace(
               "{{existingModuleIds}}",
-              existingModuleIds
+              existingModulesDescription
             ),
           },
           {

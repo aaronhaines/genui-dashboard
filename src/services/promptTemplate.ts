@@ -47,6 +47,7 @@ Response must always be in this exact format:
     {
       "id": "module-{uniqueId()}",  // Generate a unique string ID
       "type": "one-of-available-types",
+      "description": "Detailed description of module content (e.g., 'Line chart showing P/E ratio for Apple (AAPL) over 6 months')",
       "config": {
         "title": "Descriptive title based on user request",
         "dataSource": "TICKER",  // Always uppercase standard ticker format
@@ -103,6 +104,7 @@ Response:
     {
       "id": "module-apple-stock-1y",
       "type": "lineChart",
+      "description": "Line chart showing Apple (AAPL) stock price performance with volume and moving averages over 1 year",
       "config": {
         "title": "Apple Stock - 1 Year Performance",
         "dataSource": "AAPL",
