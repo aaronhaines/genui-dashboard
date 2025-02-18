@@ -28,7 +28,12 @@ const ViewModuleRenderer: React.FC<ViewModuleRendererProps> = ({ module }) => {
         />
       );
     case "dataTable":
-      return <DataTableWithData dataSource={module.config.dataSource} />;
+      return (
+        <DataTableWithData
+          dataSource={module.config.dataSource}
+          title={module.config.title} // Make sure this is being passed
+        />
+      );
     case "metrics":
       return (
         <MetricsModule
