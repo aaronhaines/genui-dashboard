@@ -12,9 +12,16 @@ export class LLMAgent {
       return;
     }
 
+    const baseURL = import.meta.env.VITE_OPENAI_BASE_URL;
+    if (!baseURL) {
+      console.error("OpenAI API baseURL not found in environment variables");
+      return;
+    }
+
     this.openai = new OpenAI({
       apiKey: apiKey,
       dangerouslyAllowBrowser: true,
+      baseURL: baseURL,
     });
   }
 
@@ -39,8 +46,12 @@ export class LLMAgent {
       .join(", ");
 
     try {
+      const openaiModel = import.meta.env.VITE_OPENAI_MODEL;
+      if (!openaiModel) {
+        console.error("OpenAI API model not found in environment variables");
+      }
       const response = await this.openai.chat.completions.create({
-        model: "gpt-4",
+        model: openaiModel,
         messages: [
           {
             role: "system",
