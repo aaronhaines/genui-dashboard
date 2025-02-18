@@ -19,7 +19,7 @@ const Dashboard: React.FC<DashboardProps> = ({ modules, layout }) => {
         className="layout"
         layouts={{ lg: layout }}
         rowHeight={60}
-        cols={{ lg: 12 }}
+        cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
         isResizable={true}
         isDraggable={true}
       >
