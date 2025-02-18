@@ -19,3 +19,10 @@ export interface DashboardState {
   modules: ViewModule[];
   layout: any;
 }
+
+export function createViewModule(module: Omit<ViewModule, "id">): ViewModule {
+  return {
+    ...module,
+    id: crypto.randomUUID(),
+  };
+}
