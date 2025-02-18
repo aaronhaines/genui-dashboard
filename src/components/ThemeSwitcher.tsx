@@ -17,10 +17,10 @@ const ThemeSwitcher: React.FC = () => {
         border: "none",
         borderRadius: "5px",
         cursor: "pointer",
-        zIndex: 1000,
+        zIndex: 2000,
       }}
     >
-      Switch to {isDarkTheme ? "Light" : "Dark"} Theme
+      {isDarkTheme ? "Light" : "Dark"} Theme
     </button>
   );
 };
