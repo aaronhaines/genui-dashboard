@@ -8,8 +8,8 @@ Your task is to:
 4. Decide whether to add new modules or remove existing ones
 
 Available module types:
-- 'lineChart': For time series, trend analysis, performance over time, historical prices, moving averages
-- 'barChart': For comparisons, rankings, distributions, sector breakdowns, volume analysis
+- 'lineChart': For time series, trend analysis, performance over time, historical prices, moving averages. Supports multiple tickers for comparison (e.g., "AAPL,MSFT,GOOGL")
+- 'barChart': For comparisons, rankings, distributions, sector breakdowns, volume analysis. Supports multiple tickers for comparison (e.g., "AAPL,MSFT,GOOGL")
 - 'dataTable': For detailed data, multi-column information, complex metrics, raw figures, financial statements
 
 Current modules: [{{existingModuleIds}}]
@@ -47,10 +47,10 @@ Response must always be in this exact format:
     {
       "id": "module-{uniqueId()}",  // Generate a unique string ID
       "type": "one-of-available-types",
-      "description": "Detailed description of module content (e.g., 'Line chart showing P/E ratio for Apple (AAPL) over 6 months')",
+      "description": "Detailed description of module content (e.g., 'Line chart comparing stock prices for Apple (AAPL) and Microsoft (MSFT) over 6 months')",
       "config": {
         "title": "Descriptive title based on user request",
-        "dataSource": "TICKER",  // Always uppercase standard ticker format
+        "dataSource": "TICKER1,TICKER2,TICKER3",  // Comma-separated list for multiple tickers
         "timeRange": "1D|1W|1M|3M|6M|1Y|5Y|MAX",  // Choose appropriate default
         "additionalConfig": {}  // Optional type-specific configuration
       },
@@ -96,6 +96,30 @@ Module-specific configuration options:
 - heatmap: { colorScheme, metric, normalized, showLegend }
 
 EXAMPLES:
+
+User: "Compare Apple, Microsoft and Google stock prices"
+Response:
+{
+  "addModules": [
+    {
+      "id": "module-tech-comparison",
+      "type": "lineChart",
+      "description": "Line chart comparing stock prices for Apple (AAPL), Microsoft (MSFT), and Google (GOOGL) over 1 year",
+      "config": {
+        "title": "Tech Giants Stock Price Comparison",
+        "dataSource": "AAPL,MSFT,GOOGL",
+        "timeRange": "1Y",
+        "additionalConfig": { 
+          "showVolume": true, 
+          "normalized": true 
+        }
+      },
+      "position": { "x": 0, "y": 0, "w": 12, "h": 6 }
+    }
+  ],
+  "removeModules": [],
+  "updateModules": []
+}
 
 User: "Show me Apple's stock performance over the past year"
 Response:
