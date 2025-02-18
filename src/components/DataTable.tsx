@@ -1,25 +1,32 @@
 import React from "react";
 
-const DataTable: React.FC<{ data: any }> = ({ data }) => {
+interface DataTableProps {
+  data: {
+    columns: string[];
+    rows: any[];
+  };
+}
+
+const DataTable: React.FC<DataTableProps> = ({ data }) => {
   if (!data || !data.columns || !data.rows) {
     return <div>No data available</div>; // Handle missing data gracefully
   }
 
   return (
-    <div className="data-table">
+    <div className="data-table" style={{ overflowX: "auto" }}>
       <h3>Data Table</h3>
       <table>
         <thead>
           <tr>
-            {data.columns.map((col: string, index: number) => (
+            {data.columns.map((col, index) => (
               <th key={index}>{col}</th>
             ))}
           </tr>
         </thead>
         <tbody>
-          {data.rows.map((row: any, index: number) => (
+          {data.rows.map((row, index) => (
             <tr key={index}>
-              {data.columns.map((col: string) => (
+              {data.columns.map((col) => (
                 <td key={col}>{row[col]}</td>
               ))}
             </tr>
