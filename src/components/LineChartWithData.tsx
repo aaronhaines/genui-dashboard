@@ -16,7 +16,7 @@ const LineChartWithData: React.FC<LineChartWithDataProps> = ({
 
   useEffect(() => {
     const fetchData = async () => {
-      console.log("fetchData called with dataSource:", dataSource);
+      //console.log("fetchData called with dataSource:", dataSource);
 
       try {
         // Handle both array and comma-separated string formats
@@ -24,7 +24,7 @@ const LineChartWithData: React.FC<LineChartWithDataProps> = ({
           ? dataSource
           : dataSource.split(",").map((s) => s.trim());
 
-        console.log("Processing dataSources:", dataSources); // Debug log
+        //console.log("Processing dataSources:", dataSources); // Debug log
 
         // Generate more realistic mock data
         const responses = await Promise.all(
@@ -66,7 +66,7 @@ const LineChartWithData: React.FC<LineChartWithDataProps> = ({
           })
         );
 
-        console.log("Responses:", responses);
+        //console.log("Responses:", responses);
         const chartData = {
           labels: responses[0].labels,
           datasets: responses.map((response) => ({
@@ -79,7 +79,7 @@ const LineChartWithData: React.FC<LineChartWithDataProps> = ({
             borderWidth: 2,
           })),
         };
-        console.log("Chart Data:", chartData);
+        //console.log("Chart Data:", chartData);
         setData(chartData);
       } catch (err) {
         console.error("Error in fetchData:", err);

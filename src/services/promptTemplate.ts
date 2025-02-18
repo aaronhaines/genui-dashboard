@@ -23,6 +23,8 @@ Ticker format standards:
 
 Follow these decision rules:
 - Add a new module when the user requests new information not currently displayed
+- For follow-up requests like "and [ticker]" or "add [ticker]", update existing relevant charts to include the new ticker(s)
+- If a similar chart type exists and the request is to add more tickers, update that chart instead of creating a new one
 - Remove a module when it's explicitly requested or when the user wants to clear/replace content
 - Preserve existing modules unless explicitly instructed to remove them
 - When in doubt, keep existing modules and add new ones
@@ -301,6 +303,43 @@ Response:
   ],
   "removeModules": [],
   "updateModules": []
+}
+
+User: "Show me Apple stock"
+Response:
+{
+  "addModules": [
+    {
+      "id": "module-apple-stock",
+      "type": "lineChart",
+      "description": "Line chart showing Apple (AAPL) stock price performance",
+      "config": {
+        "title": "Apple Stock Performance",
+        "dataSource": "AAPL",
+        "timeRange": "1Y"
+      },
+      "position": { "x": 0, "y": 0, "w": 12, "h": 6 }
+    }
+  ],
+  "removeModules": [],
+  "updateModules": []
+}
+
+User: "and Microsoft"
+Response:
+{
+  "addModules": [],
+  "removeModules": [],
+  "updateModules": [
+    {
+      "id": "module-apple-stock",
+      "config": {
+        "title": "Apple & Microsoft Stock Performance",
+        "dataSource": "AAPL,MSFT",
+        "description": "Line chart comparing stock prices for Apple (AAPL) and Microsoft (MSFT)"
+      }
+    }
+  ]
 }
 
 Remember: Always respond only with valid JSON as shown above. Never include explanatory text outside the JSON structure.`;

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import Dashboard from "./components/Dashboard";
 import ChatInterface from "./components/ChatInterface";
 import { LLMAgent } from "./services/LLMAgent";
@@ -13,7 +13,7 @@ const App: React.FC = () => {
   const [modules, setModules] = useState<ViewModule[]>([]);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const llmAgent = new LLMAgent();
+  const llmAgent = useMemo(() => new LLMAgent(), []);
 
   const handleChatMessage = async (message: string) => {
     // Add user message to chat
@@ -28,28 +28,28 @@ const App: React.FC = () => {
 
     try {
       const response = await llmAgent.processUserRequest(message, modules);
-      console.log("Current modules:", modules);
-      console.log("LLM Response:", response);
+      //console.log("Current modules:", modules);
+      //console.log("LLM Response:", response);
 
       // Handle module removal first
       if (response.removeModules.length > 0) {
-        console.log("Attempting to remove modules:", response.removeModules);
+        //console.log("Attempting to remove modules:", response.removeModules);
         setModules((prev) => {
           const updatedModules = prev.filter((module) => {
             const shouldKeep = !response.removeModules.includes(module.id);
-            console.log(
-              `Module ${module.id}: ${shouldKeep ? "keeping" : "removing"}`
-            );
+            //console.log(
+            //  `Module ${module.id}: ${shouldKeep ? "keeping" : "removing"}`
+            //);
             return shouldKeep;
           });
-          console.log("Modules after removal:", updatedModules);
+          //console.log("Modules after removal:", updatedModules);
           return updatedModules;
         });
       }
 
       // Then handle adding new modules
       if (response.addModules.length > 0) {
-        console.log("Adding new modules:", response.addModules);
+        //console.log("Adding new modules:", response.addModules);
         setModules((prev) => {
           // Adjust width to 30% and distribute modules horizontally
           const newModules = response.addModules.map((module, index) => ({
@@ -62,7 +62,7 @@ const App: React.FC = () => {
             },
           }));
           const updatedModules = [...prev, ...newModules];
-          console.log("Modules after addition:", updatedModules);
+          //console.log("Modules after addition:", updatedModules);
           return updatedModules;
         });
       }
@@ -97,7 +97,7 @@ const App: React.FC = () => {
     }
   };
 
-  console.log("Rendering App component");
+  //console.log("Rendering App component");
 
   return (
     <ThemeProvider>
