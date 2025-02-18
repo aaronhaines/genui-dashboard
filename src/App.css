@@ -63,11 +63,12 @@
   width: 300px;
   height: 100%;
   padding: 20px;
-  border-right: 1px solid #ccc;
+  border-left: 1px solid #ccc;
   background-color: white;
   display: flex;
   flex-direction: column;
   overflow-y: auto;
+  order: 2;
 }
 
 .chat-interface {
@@ -79,6 +80,8 @@
 .chat-interface form {
   margin-top: auto;
   padding: 10px;
+  display: flex;
+  flex-direction: column;
 }
 
 .chat-interface input {
@@ -86,6 +89,17 @@
   padding: 8px;
   border: 1px solid #ccc;
   border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.chat-interface textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  resize: vertical;
+  height: 100px;
 }
 
 .chat-interface button {

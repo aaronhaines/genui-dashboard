@@ -45,11 +45,16 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
         <div ref={chatEndRef} />
       </div>
       <form onSubmit={handleSubmit}>
-        <input
-          type="text"
+        <textarea
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder="Describe what financial data you'd like to see..."
+          placeholder="Describe what data you'd like to see..."
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && !e.shiftKey) {
+              e.preventDefault();
+              handleSubmit(e as any); // Type assertion to React.FormEvent
+            }
+          }}
         />
         <button type="submit">Send</button>
       </form>

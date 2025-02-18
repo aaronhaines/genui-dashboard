@@ -51,9 +51,19 @@ const App: React.FC = () => {
       if (response.addModules.length > 0) {
         console.log("Adding new modules:", response.addModules);
         setModules((prev) => {
-          const newModules = [...prev, ...response.addModules];
-          console.log("Modules after addition:", newModules);
-          return newModules;
+          // Adjust width to 30% and distribute modules horizontally
+          const newModules = response.addModules.map((module, index) => ({
+            ...module,
+            position: {
+              x: (index % 3) * 4, // 3 columns, each 4 units wide (30% of 12)
+              y: Math.floor(index / 3) * 8, // Adjust the Y position based on the row
+              w: 4, // width: 30% of the dashboard (12 units)
+              h: 4, // height
+            },
+          }));
+          const updatedModules = [...prev, ...newModules];
+          console.log("Modules after addition:", updatedModules);
+          return updatedModules;
         });
       }
 

@@ -1,5 +1,6 @@
 import OpenAI from "openai";
 import { ViewModule } from "../types/DashboardTypes";
+import promptTemplate from "./promptTemplate";
 
 export class LLMAgent {
   private openai: OpenAI | null = null;
@@ -43,41 +44,10 @@ export class LLMAgent {
         messages: [
           {
             role: "system",
-            content: `You are a financial dashboard assistant that ONLY responds in valid JSON format.
-            Never include explanatory text outside the JSON structure.
-            
-            Your task is to identify references to financial instruments such as companies, currencies, and stocks in the user's message, provide the corresponding ticker code to be used in the dataSource property of the response, select the most appropriate module type to display the data based on the user's question, and decide if new modules should be added or existing modules should be removed.
-            
-            Available module types:
-            - 'lineChart': Use for time series and continuous data.
-            - 'barChart': Use for comparison and categorical data.
-            - 'dataTable': Use for displaying structured data in rows and columns.
-            - 'metrics': Use for showing key performance indicators or single values.
-            
-            Current modules: [${existingModuleIds}]. When referring to modules, use the unique ID associated with each module.
-            
-            Response must always be in this exact format:
-            {
-              "addModules": [
-                {
-                  "id": "unique-string",
-                  "type": "one-of-available-types",
-                  "config": {
-                    "title": "string",
-                    "dataSource": "ticker-code",
-                    "timeRange": "string"
-                  },
-                  "position": { "x": 0, "y": 0, "w": 6, "h": 4 }
-                }
-              ],
-              "removeModules": ["id-to-remove"]
-            }
-
-            Even if no actions are needed, respond with empty arrays:
-            {
-              "addModules": [],
-              "removeModules": []
-            }`,
+            content: promptTemplate.replace(
+              "{{existingModuleIds}}",
+              existingModuleIds
+            ),
           },
           {
             role: "user",
