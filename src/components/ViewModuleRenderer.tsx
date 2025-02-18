@@ -1,6 +1,6 @@
 import React from "react";
 import LineChart from "./LineChart";
-import BarChart from "./BarChart";
+import BarChartWithData from "./BarChartWithData";
 import DataTable from "./DataTable";
 import Metrics from "./Metrics";
 import { ViewModule } from "../types/DashboardTypes";
@@ -14,7 +14,7 @@ const ViewModuleRenderer: React.FC<ViewModuleRendererProps> = ({ module }) => {
     case "lineChart":
       return <LineChart data={module.config.data} />;
     case "barChart":
-      return <BarChart data={module.config.data} />;
+      return <BarChartWithData dataSource={module.config.dataSource} />;
     case "dataTable":
       return <DataTable data={module.config.data} />;
     case "metrics":
