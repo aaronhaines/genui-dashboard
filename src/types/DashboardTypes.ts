@@ -1,6 +1,7 @@
 export interface ViewModule {
   id: string;
   type: string;
+  description?: string;
   config: {
     title: string;
     dataSource?: string;
