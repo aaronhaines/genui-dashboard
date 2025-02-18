@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import Dashboard from "./components/Dashboard";
 import ChatInterface from "./components/ChatInterface";
 import { LLMAgent } from "./services/LLMAgent";
@@ -10,8 +10,24 @@ import "./App.css";
 import ErrorBoundary from "./components/ErrorBoundary";
 
 const App: React.FC = () => {
-  const [modules, setModules] = useState<ViewModule[]>([]);
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [modules, setModules] = useState<ViewModule[]>(() => {
+    const savedModules = localStorage.getItem("dashboardModules");
+    return savedModules ? JSON.parse(savedModules) : [];
+  });
+
+  const [messages, setMessages] = useState<ChatMessage[]>(() => {
+    const savedMessages = localStorage.getItem("chatMessages");
+    if (savedMessages) {
+      const parsedMessages = JSON.parse(savedMessages);
+      // Convert timestamp strings back to Date objects
+      return parsedMessages.map((message: ChatMessage) => ({
+        ...message,
+        timestamp: new Date(message.timestamp),
+      }));
+    }
+    return [];
+  });
+
   const [isLoading, setIsLoading] = useState(false);
   const llmAgent = useMemo(() => new LLMAgent(), []);
 
@@ -118,6 +134,16 @@ const App: React.FC = () => {
       setIsLoading(false);
     }
   };
+
+  // Add useEffect to save modules whenever they change
+  React.useEffect(() => {
+    localStorage.setItem("dashboardModules", JSON.stringify(modules));
+  }, [modules]);
+
+  // Add useEffect to save messages whenever they change
+  React.useEffect(() => {
+    localStorage.setItem("chatMessages", JSON.stringify(messages));
+  }, [messages]);
 
   //console.log("Rendering App component");
 
