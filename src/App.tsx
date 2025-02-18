@@ -4,6 +4,8 @@ import ChatInterface from "./components/ChatInterface";
 import { LLMAgent } from "./services/LLMAgent";
 import { ViewModule } from "./types/DashboardTypes";
 import { ChatMessage } from "./types/ChatTypes";
+import { ThemeProvider } from "./context/ThemeContext";
+import ThemeSwitcher from "./components/ThemeSwitcher";
 import "./App.css";
 
 const App: React.FC = () => {
@@ -83,14 +85,17 @@ const App: React.FC = () => {
   console.log("Rendering App component");
 
   return (
-    <div className="app">
-      <div className="chat-container">
-        <ChatInterface onMessage={handleChatMessage} messages={messages} />
+    <ThemeProvider>
+      <div className="app">
+        <ThemeSwitcher />
+        <div className="chat-container">
+          <ChatInterface onMessage={handleChatMessage} messages={messages} />
+        </div>
+        <div className="dashboard-container">
+          <Dashboard modules={modules} onModulesChange={setModules} />
+        </div>
       </div>
-      <div className="dashboard-container">
-        <Dashboard modules={modules} onModulesChange={setModules} />
-      </div>
-    </div>
+    </ThemeProvider>
   );
 };
 

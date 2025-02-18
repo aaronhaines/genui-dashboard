@@ -172,3 +172,74 @@
   opacity: 0.7;
   margin-top: 4px;
 }
+
+/* Light Theme */
+body.light-theme {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+.chat-container {
+  background-color: #f5f5f5;
+}
+
+.dashboard-container {
+  background-color: #f5f5f5;
+}
+
+.chat-message.user {
+  background-color: #007bff;
+  color: white;
+}
+
+.chat-message.assistant {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+/* Dark Theme */
+body.dark-theme {
+  background-color: #121212;
+  color: #ffffff;
+}
+
+.chat-container {
+  background-color: #1e1e1e;
+}
+
+.dashboard-container {
+  background-color: #1e1e1e;
+}
+
+.chat-message.user {
+  background-color: #007bff;
+  color: white;
+}
+
+.chat-message.assistant {
+  background-color: #333333;
+  color: #ffffff;
+}
+
+/* Additional styles for dark theme */
+.grid-item {
+  background: #2a2a2a;
+  border: 1px solid #444;
+}
+
+.react-grid-item {
+  transition: all 200ms ease;
+  transition-property: left, top;
+}
+
+.react-grid-item:hover {
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+}
+
+.message-timestamp {
+  font-size: 0.8em;
+  opacity: 0.7;
+  margin-top: 4px;
+}
+
+/* Add any other necessary styles for dark theme */

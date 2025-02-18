@@ -1,4 +1,8 @@
 import React from "react";
+import LineChart from "./LineChart";
+import BarChart from "./BarChart";
+import DataTable from "./DataTable";
+import Metrics from "./Metrics";
 import { ViewModule } from "../types/DashboardTypes";
 
 interface ViewModuleRendererProps {
@@ -6,14 +10,18 @@ interface ViewModuleRendererProps {
 }
 
 const ViewModuleRenderer: React.FC<ViewModuleRendererProps> = ({ module }) => {
-  // This is a placeholder - you'll want to implement different visualizations
-  // based on module.type
-  return (
-    <div className="view-module">
-      <h3>{module.config.title}</h3>
-      <div>Module Type: {module.type}</div>
-    </div>
-  );
+  switch (module.type) {
+    case "lineChart":
+      return <LineChart data={module.config.data} />;
+    case "barChart":
+      return <BarChart data={module.config.data} />;
+    case "dataTable":
+      return <DataTable data={module.config.data} />;
+    case "metrics":
+      return <Metrics metrics={module.config.metrics} />;
+    default:
+      return <div>Unknown module type</div>;
+  }
 };
 
 export default ViewModuleRenderer;

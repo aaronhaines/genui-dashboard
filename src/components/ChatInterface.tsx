@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { ChatMessage } from "../types/ChatTypes";
 
 interface ChatInterfaceProps {
@@ -11,6 +11,14 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
   messages,
 }) => {
   const [input, setInput] = useState("");
+  const chatEndRef = useRef<HTMLDivElement | null>(null);
+
+  // Scroll to the bottom of the chat when messages change
+  useEffect(() => {
+    if (chatEndRef.current) {
+      chatEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,6 +39,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
             </div>
           </div>
         ))}
+        <div ref={chatEndRef} />
       </div>
       <form onSubmit={handleSubmit}>
         <input
