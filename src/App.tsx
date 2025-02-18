@@ -7,6 +7,7 @@ import { ChatMessage } from "./types/ChatTypes";
 import { ThemeProvider } from "./context/ThemeContext";
 import ThemeSwitcher from "./components/ThemeSwitcher";
 import "./App.css";
+import ErrorBoundary from "./components/ErrorBoundary";
 
 const App: React.FC = () => {
   const [modules, setModules] = useState<ViewModule[]>([]);
@@ -86,15 +87,17 @@ const App: React.FC = () => {
 
   return (
     <ThemeProvider>
-      <div className="app">
-        <ThemeSwitcher />
-        <div className="chat-container">
-          <ChatInterface onMessage={handleChatMessage} messages={messages} />
+      <ErrorBoundary>
+        <div className="app">
+          <ThemeSwitcher />
+          <div className="chat-container">
+            <ChatInterface onMessage={handleChatMessage} messages={messages} />
+          </div>
+          <div className="dashboard-container">
+            <Dashboard modules={modules} onModulesChange={setModules} />
+          </div>
         </div>
-        <div className="dashboard-container">
-          <Dashboard modules={modules} onModulesChange={setModules} />
-        </div>
-      </div>
+      </ErrorBoundary>
     </ThemeProvider>
   );
 };
