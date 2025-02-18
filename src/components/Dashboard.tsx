@@ -20,6 +20,8 @@ const Dashboard: React.FC<DashboardProps> = ({ modules, layout }) => {
         layouts={{ lg: layout }}
         rowHeight={30}
         cols={{ lg: 12 }}
+        isResizable={true}
+        isDraggable={true}
       >
         {modules.map((module) => (
           <div key={module.id} data-grid={module.position}>
