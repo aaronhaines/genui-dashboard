@@ -165,6 +165,10 @@
   background-color: #f0f0f0;
   color: #333;
   align-self: flex-start;
+  font-style: italic;
+  color: gray;
+  text-align: left;
+  margin: 5px 0;
 }
 
 .message-timestamp {

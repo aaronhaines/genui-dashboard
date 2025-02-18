@@ -12,6 +12,7 @@ import ErrorBoundary from "./components/ErrorBoundary";
 const App: React.FC = () => {
   const [modules, setModules] = useState<ViewModule[]>([]);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
   const llmAgent = new LLMAgent();
 
   const handleChatMessage = async (message: string) => {
@@ -23,6 +24,7 @@ const App: React.FC = () => {
       timestamp: new Date(),
     };
     setMessages((prev) => [...prev, userMessage]);
+    setIsLoading(true);
 
     try {
       const response = await llmAgent.processUserRequest(message, modules);
@@ -80,6 +82,8 @@ const App: React.FC = () => {
         timestamp: new Date(),
       };
       setMessages((prev) => [...prev, errorMessage]);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -91,7 +95,11 @@ const App: React.FC = () => {
         <div className="app">
           <ThemeSwitcher />
           <div className="chat-container">
-            <ChatInterface onMessage={handleChatMessage} messages={messages} />
+            <ChatInterface
+              onMessage={handleChatMessage}
+              messages={messages}
+              isLoading={isLoading}
+            />
           </div>
           <div className="dashboard-container">
             <Dashboard modules={modules} onModulesChange={setModules} />

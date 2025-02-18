@@ -18,7 +18,7 @@ const Dashboard: React.FC<DashboardProps> = ({ modules, layout }) => {
       <ResponsiveGridLayout
         className="layout"
         layouts={{ lg: layout }}
-        rowHeight={30}
+        rowHeight={60}
         cols={{ lg: 12 }}
         isResizable={true}
         isDraggable={true}

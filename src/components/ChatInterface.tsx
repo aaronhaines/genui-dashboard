@@ -4,11 +4,13 @@ import { ChatMessage } from "../types/ChatTypes";
 interface ChatInterfaceProps {
   onMessage: (message: string) => Promise<void>;
   messages: ChatMessage[];
+  isLoading: boolean;
 }
 
 const ChatInterface: React.FC<ChatInterfaceProps> = ({
   onMessage,
   messages,
+  isLoading,
 }) => {
   const [input, setInput] = useState("");
   const chatEndRef = useRef<HTMLDivElement | null>(null);
@@ -39,6 +41,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
             </div>
           </div>
         ))}
+        {isLoading && <div className="chat-message assistant">Thinking...</div>}
         <div ref={chatEndRef} />
       </div>
       <form onSubmit={handleSubmit}>
