@@ -3,10 +3,12 @@ import LineChart from "./LineChart";
 
 interface LineChartWithDataProps {
   dataSource: string; // URL to fetch data from
+  title: string; // Add title prop
 }
 
 const LineChartWithData: React.FC<LineChartWithDataProps> = ({
   dataSource,
+  title,
 }) => {
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -64,7 +66,7 @@ const LineChartWithData: React.FC<LineChartWithDataProps> = ({
     return <div>{error}</div>;
   }
 
-  return <LineChart data={data} />;
+  return <LineChart data={data} title={title} />;
 };
 
 export default LineChartWithData;

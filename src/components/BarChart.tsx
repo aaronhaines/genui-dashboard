@@ -29,9 +29,10 @@ interface BarChartProps {
       backgroundColor: string[];
     }[];
   };
+  title: string;
 }
 
-const BarChart: React.FC<BarChartProps> = ({ data }) => {
+const BarChart: React.FC<BarChartProps> = ({ data, title }) => {
   const options = {
     responsive: true,
     maintainAspectRatio: false, // Allow the chart to fill the container
@@ -50,7 +51,7 @@ const BarChart: React.FC<BarChartProps> = ({ data }) => {
       className="bar-chart"
       style={{ position: "relative", height: "100%", width: "100%" }}
     >
-      <h3>Bar Chart</h3>
+      <h3>{title}</h3>
       <Bar data={data} options={options} />
     </div>
   );

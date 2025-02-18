@@ -32,9 +32,10 @@ interface LineChartProps {
       backgroundColor: string;
     }[];
   };
+  title: string;
 }
 
-const LineChart: React.FC<LineChartProps> = ({ data }) => {
+const LineChart: React.FC<LineChartProps> = ({ data, title }) => {
   const options = {
     responsive: true,
     maintainAspectRatio: false, // Allow the chart to fill the container
@@ -53,7 +54,7 @@ const LineChart: React.FC<LineChartProps> = ({ data }) => {
       className="line-chart"
       style={{ position: "relative", height: "100%", width: "100%" }}
     >
-      <h3>Line Chart</h3>
+      <h3>{title}</h3>
       <Line data={data} options={options} />
     </div>
   );

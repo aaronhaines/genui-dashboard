@@ -3,9 +3,13 @@ import BarChart from "./BarChart";
 
 interface BarChartWithDataProps {
   dataSource: string; // URL to fetch data from
+  title: string; // Add title prop
 }
 
-const BarChartWithData: React.FC<BarChartWithDataProps> = ({ dataSource }) => {
+const BarChartWithData: React.FC<BarChartWithDataProps> = ({
+  dataSource,
+  title,
+}) => {
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -68,6 +72,7 @@ const BarChartWithData: React.FC<BarChartWithDataProps> = ({ dataSource }) => {
           },
         ],
       }}
+      title={title}
     />
   );
 };
