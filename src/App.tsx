@@ -28,8 +28,8 @@ const App: React.FC = () => {
 
     try {
       const response = await llmAgent.processUserRequest(message, modules);
-      //console.log("Current modules:", modules);
-      //console.log("LLM Response:", response);
+      console.log("Current modules:", modules);
+      console.log("LLM Response:", response);
 
       // Handle module removal first
       if (response.removeModules.length > 0) {
@@ -42,14 +42,36 @@ const App: React.FC = () => {
             //);
             return shouldKeep;
           });
-          //console.log("Modules after removal:", updatedModules);
+          console.log("Modules after removal:", updatedModules);
           return updatedModules;
         });
       }
 
-      // Then handle adding new modules
+      // Handle module updates
+      if (response.updateModules && response.updateModules.length > 0) {
+        setModules((prev) =>
+          prev.map((module) => {
+            const update = response.updateModules.find(
+              (u) => u.id === module.id
+            );
+            if (update) {
+              return {
+                ...module,
+                config: {
+                  ...module.config,
+                  ...update.config,
+                },
+                position: update.position || module.position,
+              };
+            }
+            return module;
+          })
+        );
+        console.log("Modules after updates:", modules);
+      }
+
+      // Handle new modules
       if (response.addModules.length > 0) {
-        //console.log("Adding new modules:", response.addModules);
         setModules((prev) => {
           // Adjust width to 30% and distribute modules horizontally
           const newModules = response.addModules.map((module, index) => ({
@@ -62,7 +84,7 @@ const App: React.FC = () => {
             },
           }));
           const updatedModules = [...prev, ...newModules];
-          //console.log("Modules after addition:", updatedModules);
+          console.log("Modules after addition:", updatedModules);
           return updatedModules;
         });
       }

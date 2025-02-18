@@ -10,6 +10,7 @@ const LineChartWithData: React.FC<LineChartWithDataProps> = ({
   dataSource,
   title,
 }) => {
+  console.log("LineChartWithData rendering with dataSource:", dataSource);
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

@@ -4,8 +4,9 @@ export interface ViewModule {
   description?: string;
   config: {
     title: string;
-    dataSource?: string;
+    dataSource: string;
     timeRange?: string;
+    additionalConfig?: any;
   };
   position: {
     x: number;
@@ -25,4 +26,14 @@ export function createViewModule(module: Omit<ViewModule, "id">): ViewModule {
     ...module,
     id: crypto.randomUUID(),
   };
+}
+
+export interface LLMResponse {
+  addModules: ViewModule[];
+  removeModules: string[];
+  updateModules: {
+    id: string;
+    config?: Partial<ViewModule["config"]>;
+    position?: ViewModule["position"];
+  }[];
 }

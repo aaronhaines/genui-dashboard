@@ -1,5 +1,5 @@
 import OpenAI from "openai";
-import { ViewModule } from "../types/DashboardTypes";
+import { ViewModule, LLMResponse } from "../types/DashboardTypes";
 import promptTemplate from "./promptTemplate";
 
 export class LLMAgent {
@@ -29,15 +29,13 @@ export class LLMAgent {
   async processUserRequest(
     message: string,
     existingModules: ViewModule[]
-  ): Promise<{
-    addModules: ViewModule[];
-    removeModules: string[];
-  }> {
+  ): Promise<LLMResponse> {
     if (!this.openai) {
       console.error("OpenAI client not initialized");
       return {
         addModules: [],
         removeModules: [],
+        updateModules: [],
       };
     }
 
@@ -100,6 +98,7 @@ export class LLMAgent {
         result = {
           addModules: [],
           removeModules: [],
+          updateModules: [],
         };
       }
 
@@ -109,12 +108,16 @@ export class LLMAgent {
         removeModules: Array.isArray(result.removeModules)
           ? result.removeModules
           : [],
+        updateModules: Array.isArray(result.updateModules)
+          ? result.updateModules
+          : [],
       };
     } catch (error) {
       console.error("Error processing request:", error);
       return {
         addModules: [],
         removeModules: [],
+        updateModules: [],
       };
     }
   }
