@@ -27,8 +27,9 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
     e.preventDefault();
     if (!input.trim()) return;
 
-    await onMessage(input);
-    setInput("");
+    const message = input.trim();
+    setInput(""); // Clear input immediately
+    await onMessage(message);
   };
 
   return (
