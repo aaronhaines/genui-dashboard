@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { ChatMessage } from "../types/ChatTypes";
+import "../styles/ChatComponent.css";
 
 interface ChatInterfaceProps {
   onMessage: (message: string) => Promise<void>;
@@ -41,7 +42,11 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
             </div>
           </div>
         ))}
-        {isLoading && <div className="chat-message assistant">Thinking...</div>}
+        {isLoading && (
+          <div className="chat-message assistant">
+            <div className="thinking-dots">Thinking...</div>
+          </div>
+        )}
         <div ref={chatEndRef} />
       </div>
       <form onSubmit={handleSubmit}>
