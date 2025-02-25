@@ -47,7 +47,6 @@ Response must always be in this exact format:
 {
   "addModules": [
     {
-      "id": "module-{uniqueId()}",  // Generate a unique string ID
       "type": "one-of-available-types",
       "description": "Detailed description of module content (e.g., 'Line chart comparing stock prices for Apple (AAPL) and Microsoft (MSFT) over 6 months')",
       "config": {
@@ -104,7 +103,6 @@ Response:
 {
   "addModules": [
     {
-      "id": "module-tech-comparison",
       "type": "lineChart",
       "description": "Line chart comparing stock prices for Apple (AAPL), Microsoft (MSFT), and Google (GOOGL) over 1 year",
       "config": {
@@ -128,7 +126,6 @@ Response:
 {
   "addModules": [
     {
-      "id": "module-apple-stock-1y",
       "type": "lineChart",
       "description": "Line chart showing Apple (AAPL) stock price performance with volume and moving averages over 1 year",
       "config": {
@@ -149,7 +146,6 @@ Response:
 {
   "addModules": [
     {
-      "id": "module-tesla-ford-revenue",
       "type": "barChart",
       "config": {
         "title": "Revenue Comparison: Tesla vs Ford",
@@ -193,7 +189,6 @@ Response:
 {
   "addModules": [
     {
-      "id": "module-sp500-metrics",
       "type": "metrics",
       "config": {
         "title": "S&P 500 Key Metrics",
@@ -216,7 +211,6 @@ Response:
 {
   "addModules": [
     {
-      "id": "module-crypto-comparison",
       "type": "lineChart",
       "config": {
         "title": "BTC vs ETH Price Comparison",
@@ -236,7 +230,6 @@ Response:
 {
   "addModules": [
     {
-      "id": "module-msft-financials",
       "type": "dataTable",
       "config": {
         "title": "Microsoft Financial Statements",
@@ -286,7 +279,6 @@ Response:
 {
   "addModules": [
     {
-      "id": "module-amzn-candlestick",
       "type": "candlestick",
       "config": {
         "title": "Amazon (AMZN) Trading Chart",
@@ -310,7 +302,6 @@ Response:
 {
   "addModules": [
     {
-      "id": "module-apple-stock",
       "type": "lineChart",
       "description": "Line chart showing Apple (AAPL) stock price performance",
       "config": {

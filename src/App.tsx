@@ -89,14 +89,15 @@ const App: React.FC = () => {
       // Handle new modules
       if (response.addModules.length > 0) {
         setModules((prev) => {
-          // Adjust width to 30% and distribute modules horizontally
+          // Generate unique IDs for new modules
           const newModules = response.addModules.map((module, index) => ({
             ...module,
+            id: `module-${Date.now()}-${index}`, // Generate unique ID
             position: {
-              x: (index % 3) * 4, // 3 columns, each 4 units wide (30% of 12)
-              y: Math.floor(index / 3) * 8, // Adjust the Y position based on the row
-              w: 4, // width: 30% of the dashboard (12 units)
-              h: 4, // height
+              x: (index % 3) * 4,
+              y: Math.floor(index / 3) * 8,
+              w: 4,
+              h: 4,
             },
           }));
           const updatedModules = [...prev, ...newModules];
