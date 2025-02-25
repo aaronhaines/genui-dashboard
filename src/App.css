@@ -272,3 +272,23 @@ body.dark-theme .line-chart {
   background-color: #111111;
   overflow: hidden;
 }
+
+.chat-module {
+  margin: 8px 0;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: white;
+  max-height: 300px;
+  overflow: auto;
+  min-height: 200px;
+}
+
+.chat-module > div {
+  height: 100%;
+  min-height: inherit;
+}
+
+.chat-module:hover {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}

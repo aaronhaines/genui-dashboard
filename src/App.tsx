@@ -8,6 +8,8 @@ import { ThemeProvider } from "./context/ThemeContext";
 import ThemeSwitcher from "./components/ThemeSwitcher";
 import "./App.css";
 import ErrorBoundary from "./components/ErrorBoundary";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 
 const App: React.FC = () => {
   const [modules, setModules] = useState<ViewModule[]>(() => {
@@ -30,6 +32,7 @@ const App: React.FC = () => {
 
   const [isLoading, setIsLoading] = useState(false);
   const llmAgent = useMemo(() => new LLMAgent(), []);
+  const [chatModules, setChatModules] = useState<ViewModule[]>([]);
 
   const handleChatMessage = async (message: string) => {
     // Add user message to chat
@@ -63,7 +66,7 @@ const App: React.FC = () => {
         });
       }
 
-      // Handle module updates
+      // Handle module updates for dashboard modules
       if (response.updateModules && response.updateModules.length > 0) {
         setModules((prev) =>
           prev.map((module) => {
@@ -73,37 +76,37 @@ const App: React.FC = () => {
             if (update) {
               return {
                 ...module,
-                config: {
-                  ...module.config,
-                  ...update.config,
-                },
+                config: { ...module.config, ...update.config },
                 position: update.position || module.position,
               };
             }
             return module;
           })
         );
-        console.log("Modules after updates:", modules);
       }
 
-      // Handle new modules
+      // Handle new modules - add to chat by default unless explicitly requested for dashboard
       if (response.addModules.length > 0) {
-        setModules((prev) => {
-          // Generate unique IDs for new modules
-          const newModules = response.addModules.map((module, index) => ({
-            ...module,
-            id: `module-${Date.now()}-${index}`, // Generate unique ID
-            position: {
-              x: (index % 3) * 4,
-              y: Math.floor(index / 3) * 8,
-              w: 4,
-              h: 4,
-            },
-          }));
-          const updatedModules = [...prev, ...newModules];
-          console.log("Modules after addition:", updatedModules);
-          return updatedModules;
-        });
+        const newModules = response.addModules.map((module, index) => ({
+          ...module,
+          id: `module-${Date.now()}-${index}`,
+          position: {
+            x: (index % 3) * 4,
+            y: Math.floor(index / 3) * 8,
+            w: 4,
+            h: 4,
+          },
+        }));
+
+        // Check if modules should go directly to dashboard (you'll need to add logic to determine this)
+        const shouldAddToDashboard = message
+          .toLowerCase()
+          .includes("add to dashboard");
+        if (shouldAddToDashboard) {
+          setModules((prev) => [...prev, ...newModules]);
+        } else {
+          setChatModules((prev) => [...prev, ...newModules]);
+        }
       }
 
       // Add assistant message to chat
@@ -136,6 +139,15 @@ const App: React.FC = () => {
     }
   };
 
+  const handleModuleDrop = (moduleId: string) => {
+    // Move module from chat to dashboard
+    const moduleToMove = chatModules.find((m) => m.id === moduleId);
+    if (moduleToMove) {
+      setModules((prev) => [...prev, moduleToMove]);
+      setChatModules((prev) => prev.filter((m) => m.id !== moduleId));
+    }
+  };
+
   // Add useEffect to save modules whenever they change
   React.useEffect(() => {
     localStorage.setItem("dashboardModules", JSON.stringify(modules));
@@ -150,21 +162,28 @@ const App: React.FC = () => {
 
   return (
     <ThemeProvider>
-      <ErrorBoundary>
-        <div className="app">
-          <ThemeSwitcher />
-          <div className="chat-container">
-            <ChatInterface
-              onMessage={handleChatMessage}
-              messages={messages}
-              isLoading={isLoading}
-            />
+      <DndProvider backend={HTML5Backend}>
+        <ErrorBoundary>
+          <div className="app">
+            <ThemeSwitcher />
+            <div className="chat-container">
+              <ChatInterface
+                onMessage={handleChatMessage}
+                messages={messages}
+                isLoading={isLoading}
+                chatModules={chatModules}
+              />
+            </div>
+            <div className="dashboard-container">
+              <Dashboard
+                modules={modules}
+                onModulesChange={setModules}
+                onModuleDrop={handleModuleDrop}
+              />
+            </div>
           </div>
-          <div className="dashboard-container">
-            <Dashboard modules={modules} onModulesChange={setModules} />
-          </div>
-        </div>
-      </ErrorBoundary>
+        </ErrorBoundary>
+      </DndProvider>
     </ThemeProvider>
   );
 };

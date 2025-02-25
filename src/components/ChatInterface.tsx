@@ -1,17 +1,45 @@
 import React, { useEffect, useRef, useState } from "react";
 import { ChatMessage } from "../types/ChatTypes";
 import "../styles/ChatComponent.css";
+import { useDrag } from "react-dnd";
+import ViewModuleRenderer from "./ViewModuleRenderer";
+
+interface ChatModuleProps {
+  module: ViewModule;
+}
+
+const DraggableModule: React.FC<ChatModuleProps> = ({ module }) => {
+  const [{ isDragging }, drag] = useDrag(() => ({
+    type: "MODULE",
+    item: { id: module.id },
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
+  }));
+
+  return (
+    <div
+      ref={drag}
+      style={{ opacity: isDragging ? 0.5 : 1, cursor: "move" }}
+      className="chat-module"
+    >
+      <ViewModuleRenderer module={module} />
+    </div>
+  );
+};
 
 interface ChatInterfaceProps {
-  onMessage: (message: string) => Promise<void>;
+  onMessage: (message: string) => void;
   messages: ChatMessage[];
   isLoading: boolean;
+  chatModules: ViewModule[];
 }
 
 const ChatInterface: React.FC<ChatInterfaceProps> = ({
   onMessage,
   messages,
   isLoading,
+  chatModules,
 }) => {
   const [input, setInput] = useState("");
   const chatEndRef = useRef<HTMLDivElement | null>(null);
@@ -37,17 +65,16 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
       <div className="chat-messages">
         {messages.map((message) => (
           <div key={message.id} className={`chat-message ${message.role}`}>
-            <div className="message-content">{message.content}</div>
+            {message.content}
             <div className="message-timestamp">
               {message.timestamp.toLocaleTimeString()}
             </div>
           </div>
         ))}
-        {isLoading && (
-          <div className="chat-message assistant">
-            <div className="thinking-dots">Thinking...</div>
-          </div>
-        )}
+        {chatModules.map((module) => (
+          <DraggableModule key={module.id} module={module} />
+        ))}
+        {isLoading && <div className="loading">Processing...</div>}
         <div ref={chatEndRef} />
       </div>
       <form onSubmit={handleSubmit}>
