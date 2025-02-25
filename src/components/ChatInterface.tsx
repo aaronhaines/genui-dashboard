@@ -74,7 +74,14 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
         {chatModules.map((module) => (
           <DraggableModule key={module.id} module={module} />
         ))}
-        {isLoading && <div className="loading">Processing...</div>}
+        {isLoading && (
+          <div className="chat-message assistant">
+            Thinking...
+            <div className="message-timestamp">
+              {new Date().toLocaleTimeString()}
+            </div>
+          </div>
+        )}
         <div ref={chatEndRef} />
       </div>
       <form onSubmit={handleSubmit}>
