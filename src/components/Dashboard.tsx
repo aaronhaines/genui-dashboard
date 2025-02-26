@@ -5,6 +5,7 @@ import { WidthProvider, Responsive } from "react-grid-layout";
 import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
 import { useDrop } from "react-dnd";
+import "../styles/Dashboard.css";
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
@@ -12,12 +13,14 @@ interface DashboardProps {
   modules: ViewModule[];
   onModulesChange: (modules: ViewModule[]) => void;
   onModuleDrop: (moduleId: string) => void;
+  onModuleSelect: (module: ViewModule) => void;
 }
 
 const Dashboard: React.FC<DashboardProps> = ({
   modules,
   onModulesChange,
   onModuleDrop,
+  onModuleSelect,
 }) => {
   const [{ isOver }, drop] = useDrop({
     accept: "MODULE",
@@ -33,6 +36,12 @@ const Dashboard: React.FC<DashboardProps> = ({
     console.log("Removing module:", moduleId);
     const updatedModules = modules.filter((module) => module.id !== moduleId);
     onModulesChange(updatedModules);
+  };
+
+  const handleModuleClick = (e: React.MouseEvent, module: ViewModule) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onModuleSelect(module);
   };
 
   return (
@@ -61,8 +70,14 @@ const Dashboard: React.FC<DashboardProps> = ({
         }}
       >
         {modules.map((module) => (
-          <div key={module.id} className="dashboard-module">
-            <div className="module-content">
+          <div
+            key={module.id}
+            className={`dashboard-module ${module.selected ? "selected" : ""}`}
+          >
+            <div
+              className="module-content"
+              onClick={(e) => handleModuleClick(e, module)}
+            >
               <ViewModuleRenderer module={module} />
             </div>
             <div

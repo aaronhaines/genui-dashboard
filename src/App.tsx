@@ -180,6 +180,27 @@ const App: React.FC = () => {
     setMessages((prev) => [...prev, confirmationMessage]);
   };
 
+  const handleModuleSelect = (selectedModule: ViewModule) => {
+    console.log("Module selected:", selectedModule.id);
+
+    setModules((prev) => {
+      const updatedModules = prev.map((module) => ({
+        ...module,
+        selected: module.id === selectedModule.id,
+      }));
+      console.log("Updated modules:", updatedModules);
+      return updatedModules;
+    });
+
+    const selectionMessage: ChatMessage = {
+      id: Date.now().toString(),
+      role: "assistant",
+      content: `${selectedModule.config.title} selected`,
+      timestamp: new Date(),
+    };
+    setMessages((prev) => [...prev, selectionMessage]);
+  };
+
   // Add useEffect to save modules whenever they change
   React.useEffect(() => {
     localStorage.setItem("dashboardModules", JSON.stringify(modules));
@@ -218,6 +239,7 @@ const App: React.FC = () => {
                 modules={modules}
                 onModulesChange={setModules}
                 onModuleDrop={handleModuleDrop}
+                onModuleSelect={handleModuleSelect}
               />
             </div>
           </div>

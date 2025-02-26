@@ -6,7 +6,7 @@ export interface ViewModule {
     title: string;
     dataSource: string;
     timeRange?: string;
-    additionalConfig?: any;
+    additionalConfig?: Record<string, any>;
   };
   position: {
     x: number;
@@ -14,6 +14,7 @@ export interface ViewModule {
     w: number;
     h: number;
   };
+  selected?: boolean;
 }
 
 export interface DashboardState {

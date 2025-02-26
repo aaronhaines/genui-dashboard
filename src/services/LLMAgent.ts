@@ -41,7 +41,12 @@ export class LLMAgent {
 
     // Create a description of existing modules including both ID and description
     const existingModulesDescription = existingModules
-      .map((module) => `${module.id}: ${module.description || module.type}`)
+      .map(
+        (module) =>
+          `${module.id}: ${module.description || module.type} : ${
+            module.selected ? "SELECTED" : "NOT SELECTED"
+          }`
+      )
       .join("\n");
 
     // Add user message to history

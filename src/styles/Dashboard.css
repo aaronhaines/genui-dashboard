@@ -4,8 +4,23 @@
 
 .dashboard-module {
   position: relative;
+  background: var(--module-bg);
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease-in-out;
+}
+
+.dashboard-module.selected {
+  border: 2px solid #999;
+  box-shadow: 0 0 0 2px #999;
+  transform: scale(1.005);
+}
+
+.module-content {
   width: 100%;
   height: 100%;
+  overflow: hidden;
 }
 
 .remove-module-button {

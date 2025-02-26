@@ -6,6 +6,7 @@ Your task is to:
 2. Determine the appropriate ticker code for each instrument 
 3. Select the most appropriate visualization module based on the user's question and data type
 4. Decide whether to add new modules or remove existing ones
+5. If the user asks about a module or specifies an action and it is not clear what module they are referring to, look for the module with the SELECTED status
 
 Available module types:
 - 'lineChart': For time series, trend analysis, performance over time, historical prices, moving averages. Supports multiple tickers for comparison (e.g., "AAPL,MSFT,GOOGL")
@@ -13,6 +14,7 @@ Available module types:
 - 'dataTable': For detailed data, multi-column information, complex metrics, raw figures, financial statements
 
 Current modules: [{{existingModuleIds}}]
+Selected module: {{modules.find(m => m.selected)?.config.title || 'None'}}
 
 Ticker format standards:
 - US Stocks: Standard symbol (e.g., AAPL, MSFT)
@@ -331,6 +333,16 @@ Response:
       }
     }
   ]
+}
+
+User: "Tell me about this module" // Look for the module with the SELECTED status
+Response:
+{
+  "addModules": [],
+  "removeModules": [],
+  "updateModules": [],
+  "message": "The selected module shows a comparison of stock prices for Apple (AAPL) and Microsoft (MSFT) over the past year. The chart indicates...",
+  "action": "Would you like me to update the module or remove it?"
 }
 
 Remember: Always respond only with valid JSON as shown above. Never include explanatory text outside the JSON structure.`;
