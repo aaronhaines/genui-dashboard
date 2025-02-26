@@ -6,9 +6,13 @@ import ViewModuleRenderer from "./ViewModuleRenderer";
 
 interface ChatModuleProps {
   module: ViewModule;
+  onAddToDashboard: (moduleId: string) => void;
 }
 
-const DraggableModule: React.FC<ChatModuleProps> = ({ module }) => {
+const DraggableModule: React.FC<ChatModuleProps> = ({
+  module,
+  onAddToDashboard,
+}) => {
   const [{ isDragging }, drag] = useDrag(() => ({
     type: "MODULE",
     item: { id: module.id },
@@ -23,6 +27,13 @@ const DraggableModule: React.FC<ChatModuleProps> = ({ module }) => {
       style={{ opacity: isDragging ? 0.5 : 1, cursor: "move" }}
       className="chat-module"
     >
+      <button
+        className="add-to-dashboard-button"
+        onClick={() => onAddToDashboard(module.id)}
+        title="Add to dashboard"
+      >
+        +
+      </button>
       <ViewModuleRenderer module={module} />
     </div>
   );
@@ -72,6 +83,13 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
     await onMessage(message);
   };
 
+  const handleAddModuleToDashboard = (moduleId: string) => {
+    const moduleToAdd = chatModules.find((m) => m.id === moduleId);
+    if (moduleToAdd) {
+      onAddLatestToDashboard();
+    }
+  };
+
   return (
     <div className="chat-interface">
       <div className="chat-messages">
@@ -84,7 +102,11 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
           </div>
         ))}
         {chatModules.map((module) => (
-          <DraggableModule key={module.id} module={module} />
+          <DraggableModule
+            key={module.id}
+            module={module}
+            onAddToDashboard={handleAddModuleToDashboard}
+          />
         ))}
         {isLoading && (
           <div className="chat-message assistant">

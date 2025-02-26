@@ -32,3 +32,32 @@
     opacity: 0.4;
   }
 }
+
+.chat-module {
+  position: relative;
+}
+
+.chat-module .add-to-dashboard-button {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 20px !important; /* Override any other styles */
+  height: 20px;
+  border-radius: 10%;
+  color: white;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  z-index: 1;
+  opacity: 0.8;
+  transition: opacity 0.2s;
+  padding: 0;
+  line-height: 1;
+}
+
+.chat-module .add-to-dashboard-button:hover {
+  opacity: 1;
+}
