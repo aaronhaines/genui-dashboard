@@ -22,13 +22,18 @@ const Dashboard: React.FC<DashboardProps> = ({
   const [{ isOver }, drop] = useDrop({
     accept: "MODULE",
     drop: (item: { id: string }) => {
-      console.log("Module dropped:", item.id); // Debug log
       onModuleDrop(item.id);
     },
     collect: (monitor) => ({
       isOver: !!monitor.isOver(),
     }),
   });
+
+  const handleRemoveModule = (moduleId: string) => {
+    console.log("Removing module:", moduleId);
+    const updatedModules = modules.filter((module) => module.id !== moduleId);
+    onModulesChange(updatedModules);
+  };
 
   return (
     <div
@@ -37,7 +42,7 @@ const Dashboard: React.FC<DashboardProps> = ({
       style={{
         width: "100%",
         height: "100%",
-        backgroundColor: isOver ? "rgba(0, 0, 0, 0.1)" : "transparent", // Visual feedback
+        backgroundColor: isOver ? "rgba(0, 0, 0, 0.1)" : "transparent",
       }}
     >
       <ResponsiveGridLayout
@@ -48,7 +53,6 @@ const Dashboard: React.FC<DashboardProps> = ({
         isResizable={true}
         isDraggable={true}
         onLayoutChange={(layout) => {
-          // Update module positions when layout changes
           const updatedModules = modules.map((module) => ({
             ...module,
             position: layout.find((l) => l.i === module.id) || module.position,
@@ -57,8 +61,21 @@ const Dashboard: React.FC<DashboardProps> = ({
         }}
       >
         {modules.map((module) => (
-          <div key={module.id} data-grid={module.position}>
-            <ViewModuleRenderer module={module} />
+          <div key={module.id} className="dashboard-module">
+            <div className="module-content">
+              <ViewModuleRenderer module={module} />
+            </div>
+            <div
+              role="button"
+              className="remove-module-button"
+              onMouseDown={(e) => {
+                e.stopPropagation();
+                handleRemoveModule(module.id);
+              }}
+              title="Remove from dashboard"
+            >
+              ×
+            </div>
           </div>
         ))}
       </ResponsiveGridLayout>
