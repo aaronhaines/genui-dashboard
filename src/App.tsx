@@ -33,6 +33,18 @@ const App: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const llmAgent = useMemo(() => new LLMAgent(), []);
   const [chatModules, setChatModules] = useState<ViewModule[]>([]);
+  const [addToDashboardFirst, setAddToDashboardFirst] = useState(() => {
+    const saved = localStorage.getItem("addToDashboardFirst");
+    return saved ? JSON.parse(saved) : false;
+  });
+
+  // Save preference when it changes
+  useEffect(() => {
+    localStorage.setItem(
+      "addToDashboardFirst",
+      JSON.stringify(addToDashboardFirst)
+    );
+  }, [addToDashboardFirst]);
 
   const handleChatMessage = async (message: string) => {
     // Add user message to chat
@@ -85,7 +97,7 @@ const App: React.FC = () => {
         );
       }
 
-      // Handle new modules - add to chat by default unless explicitly requested for dashboard
+      // Handle new modules - respect the addToDashboardFirst preference
       if (response.addModules.length > 0) {
         const newModules = response.addModules.map((module, index) => ({
           ...module,
@@ -98,10 +110,10 @@ const App: React.FC = () => {
           },
         }));
 
-        // Check if modules should go directly to dashboard (you'll need to add logic to determine this)
-        const shouldAddToDashboard = message
-          .toLowerCase()
-          .includes("add to dashboard");
+        // Check if modules should go directly to dashboard
+        const shouldAddToDashboard =
+          addToDashboardFirst ||
+          message.toLowerCase().includes("add to dashboard");
         if (shouldAddToDashboard) {
           setModules((prev) => [...prev, ...newModules]);
         } else {
@@ -165,13 +177,19 @@ const App: React.FC = () => {
       <DndProvider backend={HTML5Backend}>
         <ErrorBoundary>
           <div className="app">
-            <ThemeSwitcher />
+            <div className="app-header">
+              <ThemeSwitcher />
+            </div>
             <div className="chat-container">
               <ChatInterface
                 onMessage={handleChatMessage}
                 messages={messages}
                 isLoading={isLoading}
                 chatModules={chatModules}
+                addToDashboardFirst={addToDashboardFirst}
+                onTogglePreference={() =>
+                  setAddToDashboardFirst(!addToDashboardFirst)
+                }
               />
             </div>
             <div className="dashboard-container">

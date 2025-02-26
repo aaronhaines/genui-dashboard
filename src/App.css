@@ -78,10 +78,9 @@
 }
 
 .chat-interface form {
-  margin-top: auto;
-  padding: 10px;
   display: flex;
   flex-direction: column;
+  gap: 8px;
 }
 
 .chat-interface input {
@@ -291,4 +290,26 @@ body.dark-theme .line-chart {
 
 .chat-module:hover {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.app-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.5rem;
+  background-color: var(--background-secondary);
+}
+
+.module-preference-toggle {
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  background-color: var(--background-primary);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.module-preference-toggle:hover {
+  background-color: var(--background-secondary);
 }

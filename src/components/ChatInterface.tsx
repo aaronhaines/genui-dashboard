@@ -33,6 +33,8 @@ interface ChatInterfaceProps {
   messages: ChatMessage[];
   isLoading: boolean;
   chatModules: ViewModule[];
+  addToDashboardFirst: boolean;
+  onTogglePreference: () => void;
 }
 
 const ChatInterface: React.FC<ChatInterfaceProps> = ({
@@ -40,6 +42,8 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
   messages,
   isLoading,
   chatModules,
+  addToDashboardFirst,
+  onTogglePreference,
 }) => {
   const [input, setInput] = useState("");
   const chatEndRef = useRef<HTMLDivElement | null>(null);
@@ -97,6 +101,13 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
           }}
         />
         <button type="submit">Send</button>
+        <button
+          type="button"
+          className="module-preference-toggle"
+          onClick={onTogglePreference}
+        >
+          {addToDashboardFirst ? "Add to Dashboard First" : "Add to Chat First"}
+        </button>
       </form>
     </div>
   );
