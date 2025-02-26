@@ -160,6 +160,26 @@ const App: React.FC = () => {
     }
   };
 
+  const handleAddLatestToDashboard = () => {
+    if (chatModules.length === 0) return;
+
+    const latestModule = chatModules[chatModules.length - 1];
+
+    // Add to dashboard
+    setModules((prev) => [...prev, latestModule]);
+    // Remove from chat
+    setChatModules((prev) => prev.filter((m) => m.id !== latestModule.id));
+
+    // Add a confirmation message to the chat
+    const confirmationMessage: ChatMessage = {
+      id: Date.now().toString(),
+      role: "assistant",
+      content: "Latest module added to dashboard.",
+      timestamp: new Date(),
+    };
+    setMessages((prev) => [...prev, confirmationMessage]);
+  };
+
   // Add useEffect to save modules whenever they change
   React.useEffect(() => {
     localStorage.setItem("dashboardModules", JSON.stringify(modules));
@@ -190,6 +210,7 @@ const App: React.FC = () => {
                 onTogglePreference={() =>
                   setAddToDashboardFirst(!addToDashboardFirst)
                 }
+                onAddLatestToDashboard={handleAddLatestToDashboard}
               />
             </div>
             <div className="dashboard-container">

@@ -35,6 +35,7 @@ interface ChatInterfaceProps {
   chatModules: ViewModule[];
   addToDashboardFirst: boolean;
   onTogglePreference: () => void;
+  onAddLatestToDashboard: () => void;
 }
 
 const ChatInterface: React.FC<ChatInterfaceProps> = ({
@@ -44,6 +45,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
   chatModules,
   addToDashboardFirst,
   onTogglePreference,
+  onAddLatestToDashboard,
 }) => {
   const [input, setInput] = useState("");
   const chatEndRef = useRef<HTMLDivElement | null>(null);
@@ -59,8 +61,14 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
     e.preventDefault();
     if (!input.trim()) return;
 
-    const message = input.trim();
+    const message = input.trim().toLowerCase();
     setInput(""); // Clear input immediately
+
+    if (message === "add to dashboard" && chatModules.length > 0) {
+      onAddLatestToDashboard();
+      return;
+    }
+
     await onMessage(message);
   };
 
