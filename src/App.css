@@ -313,3 +313,22 @@ body.dark-theme .line-chart {
 .module-preference-toggle:hover {
   background-color: var(--background-secondary);
 }
+
+.button-group {
+  display: flex;
+  gap: 8px;
+}
+
+.mute-toggle {
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  background-color: var(--background-primary);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.mute-toggle:hover {
+  background-color: var(--background-secondary);
+}

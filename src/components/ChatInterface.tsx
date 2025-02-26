@@ -47,6 +47,74 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
 }) => {
   const [input, setInput] = useState("");
   const chatEndRef = useRef<HTMLDivElement | null>(null);
+  const [isMuted, setIsMuted] = useState(() => {
+    const saved = localStorage.getItem("chatMuted");
+    return saved ? JSON.parse(saved) : false;
+  });
+  const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
+
+  // Save mute preference
+  useEffect(() => {
+    localStorage.setItem("chatMuted", JSON.stringify(isMuted));
+  }, [isMuted]);
+
+  // Load and log available voices
+  useEffect(() => {
+    const loadVoices = () => {
+      const availableVoices = window.speechSynthesis.getVoices();
+      setVoices(availableVoices);
+      console.log(
+        "Available voices:",
+        availableVoices.map((voice) => ({
+          name: voice.name,
+          lang: voice.lang,
+          default: voice.default,
+        }))
+      );
+    };
+
+    // Chrome loads voices asynchronously
+    window.speechSynthesis.onvoiceschanged = loadVoices;
+    loadVoices(); // Initial load for Firefox
+
+    return () => {
+      window.speechSynthesis.onvoiceschanged = null;
+    };
+  }, []);
+
+  const speak = (text: string) => {
+    if (isMuted) return;
+    window.speechSynthesis.cancel();
+
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.rate = 0.9;
+    utterance.pitch = 1.1;
+    utterance.volume = 1.0;
+
+    // Try to use Samantha, fall back to any US English voice
+    const samanthaVoice = voices.find((voice) =>
+      voice.name.includes("Samantha")
+    );
+    const usEnglishVoice = voices.find((voice) => voice.lang === "en-US");
+
+    utterance.voice = samanthaVoice || usEnglishVoice || null;
+
+    if (utterance.voice) {
+      console.log("Using voice:", utterance.voice.name);
+    }
+
+    window.speechSynthesis.speak(utterance);
+  };
+
+  // Effect to handle new messages
+  useEffect(() => {
+    if (messages.length > 0) {
+      const lastMessage = messages[messages.length - 1];
+      if (lastMessage.role === "assistant") {
+        speak(lastMessage.content);
+      }
+    }
+  }, [messages]);
 
   // Scroll to the bottom of the chat when messages change
   useEffect(() => {
@@ -59,9 +127,11 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
     e.preventDefault();
     if (!input.trim()) return;
 
-    const message = input.trim();
-    setInput(""); // Clear input immediately
-    await onMessage(message);
+    // Cancel any ongoing speech when user sends new message
+    window.speechSynthesis.cancel();
+
+    onMessage(input);
+    setInput("");
   };
 
   return (
@@ -100,14 +170,25 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
             }
           }}
         />
-        <button type="submit">Send</button>
-        <button
-          type="button"
-          className="module-preference-toggle"
-          onClick={onTogglePreference}
-        >
-          {addToDashboardFirst ? "Add to Dashboard First" : "Add to Chat First"}
-        </button>
+        <div className="button-group">
+          <button type="submit">Send</button>
+          <button
+            type="button"
+            className="module-preference-toggle"
+            onClick={onTogglePreference}
+          >
+            {addToDashboardFirst
+              ? "Add to Dashboard First"
+              : "Add to Chat First"}
+          </button>
+          <button
+            type="button"
+            className="mute-toggle"
+            onClick={() => setIsMuted(!isMuted)}
+          >
+            {isMuted ? "🔇 Unmute" : "🔊 Mute"}
+          </button>
+        </div>
       </form>
     </div>
   );
